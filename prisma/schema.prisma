@@ -8,6 +8,25 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(uuid())
-  nome String
+  id      String @id @default(uuid())
+  nome    String
+  funcao  String
+  status  String
+  usuario String
+  senha   String
+}
+
+model Produto {
+  id            String @id @default(uuid())
+  nome          String
+  quantidade    Int
+  valor_unidade Int
+  imagem        String
+}
+
+model Vendas {
+  id          String   @id @default(uuid())
+  data_venda  DateTime @default(now())
+  quantidade  String
+  valor_total Int
 }

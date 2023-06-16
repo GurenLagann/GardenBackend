@@ -1,12 +1,94 @@
 import { FastifyInstance } from "fastify";
+import { z } from "zod"
 import { prisma } from "../lib/prisma";
 
 export async function estoqueRoutes(app: FastifyInstance) {
-  app.get('/users', async () => {
-    const users = await prisma.user.findMany()
-  
-    return users
+  app.get('/product', async () => {
+    const items = await prisma.produto.findMany()
+    return items
   })
-  
-  
+
+  app.get('/product/:id', async (request) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = paramsSchema.parse(request.params)
+
+    const item = await prisma.produto.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+
+    return item
+  })
+
+  app.post('/product', async (request) => {
+    const bodySchema = z.object({      
+      nome: z.string(),
+      quantidade: z.number(),
+      valor_unidade: z.number(),
+      imagem: z.string()
+    })
+
+    const { nome, quantidade, valor_unidade, imagem } = bodySchema.parse(request.body)
+
+    const item = await prisma.produto.create({
+      data: {
+        nome,
+        quantidade,
+        valor_unidade,
+        imagem
+      }
+    })
+
+    return item
+  })
+
+  app.put('/product/:id', async (request) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = paramsSchema.parse(request.params)
+
+    const bodySchema = z.object({      
+      nome: z.string(),
+      quantidade: z.number(),
+      valor_unidade: z.number(),
+      imagem: z.string()
+    })
+
+    const { nome, quantidade, valor_unidade, imagem } = bodySchema.parse(request.body)
+
+    const item = await prisma.produto.update({
+      where: {
+        id,
+      },
+      data: {
+        nome,
+        quantidade,
+        valor_unidade,
+        imagem
+      }
+    })
+    return item
+  })
+
+  app.delete('/product/:id', async (request) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = paramsSchema.parse(request.params)
+
+    await prisma.produto.delete({
+      where: {
+        id,
+      },
+    })
+  })
+
+
 }
