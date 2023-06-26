@@ -3,6 +3,11 @@ import { z } from "zod"
 import { prisma } from "../lib/prisma";
 
 export async function estoqueRoutes(app: FastifyInstance) {
+
+  app.addHook('preHandler', async (request)=> {
+    await request.jwtVerify()
+  })
+
   app.get('/product', async () => {
     const items = await prisma.produto.findMany()
     return items
