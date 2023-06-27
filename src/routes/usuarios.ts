@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { z } from "zod"
 import { prisma } from "../lib/prisma";
 
-export async function usuarioRoutes(app: FastifyInstance) {
+export async function userRoutes(app: FastifyInstance) {
 
   app.addHook('preHandler', async (request)=> {
     await request.jwtVerify()
@@ -24,30 +24,6 @@ export async function usuarioRoutes(app: FastifyInstance) {
       where: {
         id,
       },
-    })
-
-    return user
-  })
-
-  app.post('/user', async (request) => {
-    const bodySchema = z.object({      
-      nome: z.string(),
-      funcao: z.string(),
-      status: z.string(),
-      usuario: z.string(),
-      senha: z.string()
-    })
-
-    const { nome, funcao, status, usuario, senha } = bodySchema.parse(request.body)
-
-    const user = await prisma.user.create({
-      data: {
-        nome,
-        funcao,
-        status,
-        usuario,
-        senha
-      }
     })
 
     return user

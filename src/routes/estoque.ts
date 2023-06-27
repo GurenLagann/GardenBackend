@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { z } from "zod"
 import { prisma } from "../lib/prisma";
 
-export async function estoqueRoutes(app: FastifyInstance) {
+export async function stockRoutes(app: FastifyInstance) {
 
   app.addHook('preHandler', async (request)=> {
     await request.jwtVerify()
