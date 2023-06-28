@@ -34,17 +34,17 @@ export async function stockRoutes(app: FastifyInstance) {
       nome: z.string(),
       quantidade: z.number(),
       valor_unidade: z.number(),
-      imagem: z.string()
+      foto: z.string()
     })
 
-    const { nome, quantidade, valor_unidade, imagem } = bodySchema.parse(request.body)
+    const { nome, quantidade, valor_unidade, foto } = bodySchema.parse(request.body)
 
     const item = await prisma.produto.create({
       data: {
         nome,
         quantidade,
         valor_unidade,
-        imagem
+        foto
       }
     })
 
@@ -62,10 +62,10 @@ export async function stockRoutes(app: FastifyInstance) {
       nome: z.string(),
       quantidade: z.number(),
       valor_unidade: z.number(),
-      imagem: z.string()
+      foto: z.string()
     })
 
-    const { nome, quantidade, valor_unidade, imagem } = bodySchema.parse(request.body)
+    const { nome, quantidade, valor_unidade, foto } = bodySchema.parse(request.body)
 
     const item = await prisma.produto.update({
       where: {
@@ -75,7 +75,7 @@ export async function stockRoutes(app: FastifyInstance) {
         nome,
         quantidade,
         valor_unidade,
-        imagem
+        foto
       }
     })
     return item

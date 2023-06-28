@@ -9,7 +9,7 @@ export async function salesRoutes(app: FastifyInstance) {
   })
 
   app.get('/sales', async () => {
-    const items = await prisma.vendas.findMany()
+    const items = await prisma.venda.findMany()
     return items
   })
 
@@ -20,7 +20,7 @@ export async function salesRoutes(app: FastifyInstance) {
 
     const { id } = salesSchema.parse(request.params)
 
-    const item = await prisma.vendas.findFirstOrThrow({
+    const item = await prisma.venda.findFirstOrThrow({
       where: {
         id,
       }
@@ -28,20 +28,19 @@ export async function salesRoutes(app: FastifyInstance) {
     return item
   })
 
-  app.post('/sales', async (request) => {
-    const salesSchema = z.object({
-      quantidade: z.string(),
-      valor_total: z.number()
-    })
+  // app.post('/sales', async (request) => {
+  //   const salesSchema = z.object({
+  //     quantidade: z.string(),
+  //     valor_total: z.number()
+  //   })
 
-    const { quantidade, valor_total } = salesSchema.parse(request.body)
-    const item = await prisma.vendas.create({
-      data: {
-        quantidade,
-        valor_total
-      }
-    })
-    return item
-  })
+  //   const { quantidade, valor_total } = salesSchema.parse(request.body)
+  //   const item = await prisma.venda.create({
+  //     data: {
+  //       valor_total
+  //     }
+  //   })
+  //   return item
+  // })
 }
 

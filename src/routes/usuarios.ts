@@ -9,7 +9,7 @@ export async function userRoutes(app: FastifyInstance) {
   })
 
   app.get('/user', async () => {
-    const users = await prisma.user.findMany()
+    const users = await prisma.usuario.findMany()
     return users
   })
 
@@ -20,7 +20,7 @@ export async function userRoutes(app: FastifyInstance) {
 
     const { id } = paramsSchema.parse(request.params)
 
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma.usuario.findUniqueOrThrow({
       where: {
         id,
       },
@@ -46,11 +46,10 @@ export async function userRoutes(app: FastifyInstance) {
 
     const { nome, funcao, status, usuario, senha } = bodySchema.parse(request.body)
 
-    const user = await prisma.user.create({
+    const user = await prisma.usuario.create({
       data: {
         nome,
         funcao,
-        status,
         usuario,
         senha
       }
@@ -66,7 +65,7 @@ export async function userRoutes(app: FastifyInstance) {
 
     const { id } = paramsSchema.parse(request.params)
 
-    await prisma.user.delete({
+    await prisma.usuario.delete({
       where: {
         id,
       },

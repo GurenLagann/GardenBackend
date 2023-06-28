@@ -4,9 +4,9 @@ import { prisma } from "../lib/prisma";
 
 export async function authRoutes(app: FastifyInstance) {
 
-  app.addHook('preHandler', async (request)=> {
-    await request.jwtVerify()
-  })
+  // app.addHook('preHandler', async (request)=> {
+  //   await request.jwtVerify()
+  // })
 
   app.post('/register', async (request) => {
     const bodySchema = z.object({
@@ -18,18 +18,19 @@ export async function authRoutes(app: FastifyInstance) {
 
     const { nome, funcao, usuario, senha } = bodySchema.parse(request.body)
 
-    let user = await prisma.user.findUnique({
+    let user = await prisma.usuario.findUnique({
       where: {
         usuario: usuario
       }
     })
 
     if (!user) {
-      user = await prisma.user.create({
+      user = await prisma.usuario.create({
         data: {
           nome: nome,
           funcao: funcao,
           status: "Ativo",
+          role: "ADMIN",
           usuario: usuario,
           senha: senha
         }
