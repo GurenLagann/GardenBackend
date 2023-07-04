@@ -1,24 +1,9 @@
-import fastify from "fastify";
-import cors from "@fastify/cors";
-import jwt from "@fastify/jwt";
-import { stockRoutes } from "./routes/estoque";
-import { userRoutes } from "./routes/usuarios";
-import { authRoutes } from "./routes/auth";
-import { salesRoutes } from "./routes/vendas";
+import express from "express";
+import { router } from "./router";
 
-const app = fastify()
+const app = express()
 
-app.register(cors, { origin: true, })
+app.use(express.json())
+app.use(router)
 
-app.register(jwt, { secret: 'spacetime' })
-
-app.register(authRoutes)
-app.register(userRoutes)
-app.register(stockRoutes)
-app.register(salesRoutes)
-
-app.listen({
-  port: 3333,
-}).then(() => {
-  console.log('HTTP server running on http://localhost:3333')
-})
+app.listen(3333, () => console.log("HTTP server running on http://localhost:3333"))

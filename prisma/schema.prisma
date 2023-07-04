@@ -10,78 +10,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id         String    @id @default(uuid())
-  created_at DateTime  @default(now())
-  update_at  DateTime?
-  nome       String
-  status     Status    @default(Ativo)
-  role       Role      @default(USER)
-  vendas     Venda[]
-  usuario    String    @unique
-  senha      String
-  funcao     String
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  usuario     String       @unique
+  password    String
+  user_access UserAccess[]
+  status      String       @default("Ativo")
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
 }
 
-model Produto {
-  id            String         @id @default(uuid())
-  created_at    DateTime       @default(now())
-  nome          String
-  quantidade    Int?
-  valor_unidade Float
-  update_at     DateTime?
-  foto          String?
-  VendaProduto  VendaProduto[]
+model UserAccess {
+  id         String   @id @default(uuid())
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  Access     Access?  @relation(fields: [accessId], references: [id])
+  accessId   String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
-model Venda {
-  id             String         @id @default(uuid())
-  created_at     DateTime       @default(now())
-  usuario        Usuario        @relation(fields: [usuario_id], references: [id])
-  usuario_id     String
-  valor_total    Float
-  valor_desconto Float?         @default(0)
-  valor_final    Float
-  VendaProduto   VendaProduto[]
-  Pagamento      Pagamento[]
+model Access {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  user_access UserAccess[]
 }
 
-model VendaProduto {
-  id         String  @id @default(uuid())
-  produto    Produto @relation(fields: [produto_id], references: [id])
-  produto_id String
-  venda      Venda   @relation(fields: [venda_id], references: [id])
-  venda_id   String
-  quantidade Int
-}
-
-model Pagamento {
-  id               String         @id @default(uuid())
-  created_at       DateTime       @default(now())
-  venda            Venda          @relation(fields: [vendaId], references: [id])
-  vendaId          String
-  formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
-  formaPagamentoId String
-  valor            Float
-  data_faturamento DateTime?
-  data_pagamento   DateTime?
-}
-
-model FormaPagamento {
-  id        String      @id @default(uuid())
-  nome      String
-  ordem     Int
-  Pagamento Pagamento[]
-}
-
-enum Status {
-  Ativo
-  Inativo
-  Ferias
-  Afastado
-}
-
-enum Role {
-  USER
-  ADMIN
+model Product {
+  id         String   @id @default(uuid())
+  name       String
+  price      Float
+  amount     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  Photo      String?
 }
