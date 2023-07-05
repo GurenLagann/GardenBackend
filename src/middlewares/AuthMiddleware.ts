@@ -43,12 +43,16 @@ export function AuthMiddleware(permissions?: string[]) {
         })
         const userPermissions = user?.user_access.map((na) => na.Access?.name) ?? []
         const hasPermissions = permissions.some((p) => userPermissions.includes(p))
+
+        if (!hasPermissions) {
+          return res.status(403).json({ message: "Permissão Negada" })
+        }
       }
 
-
+      return next()
 
     } catch (error) {
-
+      return res.status(401).json({ menssage: "token invalido" })
     }
   }
 
