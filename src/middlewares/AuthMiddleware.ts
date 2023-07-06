@@ -3,19 +3,20 @@ import { verify } from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
 
 interface DecodedToken {
-  userId: string
+  id: string
 }
 
-
+ 
 export function AuthMiddleware(permissions?: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const AuthHeader = req.headers.authorization
 
-    if (!AuthHeader || !AuthHeader.startsWith("Barrer ")) {
+    if (!AuthHeader || !AuthHeader.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Token não fornecido" })
     }
 
     const token = AuthHeader.substring(7)
+    
 
     try {
       const MySecretKey = process.env.MY_SECRET_KEY
@@ -24,14 +25,14 @@ export function AuthMiddleware(permissions?: string[]) {
         throw new Error("Chave secreta não exite");
       }
 
-      const DecodedToken = verify(token, MySecretKey) as DecodedToken
+      const decodedToken = verify(token, MySecretKey) as DecodedToken
 
-      req.user = { id: DecodedToken.userId }
+      req.user = { id: decodedToken.id }
 
       if (permissions) {
         const user = await prisma.user.findUnique({
           where: {
-            id: DecodedToken.userId
+            id: decodedToken.id
           },
           include: {
             user_access: {
@@ -41,6 +42,7 @@ export function AuthMiddleware(permissions?: string[]) {
             }
           }
         })
+        
         const userPermissions = user?.user_access.map((na) => na.Access?.name) ?? []
         const hasPermissions = permissions.some((p) => userPermissions.includes(p))
 

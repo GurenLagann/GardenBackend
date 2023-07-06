@@ -10,12 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id          String       @id @default(uuid())
   name        String
   usuario     String       @unique
   password    String
+  sales       Sales[]
   user_access UserAccess[]
   status      String       @default("Ativo")
   created_at  DateTime     @default(now())
@@ -41,11 +41,35 @@ model Access {
 }
 
 model Product {
+  id            String          @id @default(uuid())
+  name          String
+  price         Float
+  amount        Int
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  Photo         String?
+  SalesProducts SalesProducts[]
+}
+
+model Sales {
+  id            String          @id @default(uuid())
+  total_value   Float
+  discont_value Float?
+  final_value   Float
+  user          User?           @relation(fields: [userId], references: [id])
+  userId        String?
+  SalesProducts SalesProducts[]
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+}
+
+model SalesProducts {
   id         String   @id @default(uuid())
-  name       String
-  price      Float
-  amount     Int
+  quantity   Int
+  sales      Sales    @relation(fields: [salesId], references: [id])
+  salesId    String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  Photo      String?
 }
