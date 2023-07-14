@@ -9,7 +9,7 @@ import { createSales, getAllSales, getAllSalesByUser } from "./controller/SalesC
 
 export const router = Router()
 
-router.post("/signIn", signIn)
+router.post("/", signIn)
 
 router.post("/user", AuthMiddleware(["Admin"]), createUser)
 router.get("/user/:id", AuthMiddleware(["Admin"]), getUser)
