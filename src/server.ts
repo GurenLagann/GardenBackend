@@ -7,10 +7,15 @@ const app = express()
 app.use(express.json())
 app.use(router)
 
-app.use(cors({
-  origin: true,
-  credentials: true
-}))
+const options: cors.CorsOptions = {
+  methods: "GET, OPTIONS, PUT, POST, DELETE",
+  origin: "*",
+  allowedHeaders: "origin, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Data, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token, Authorization"
+}
+
+app.use(cors(options))
+
+
 
 
 
